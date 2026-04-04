@@ -17,3 +17,4 @@ Incidentes críticos
 Mantenimiento
 Consultas generales
 Automatizacion
+Monitoreo
