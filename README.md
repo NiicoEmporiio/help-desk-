@@ -1,30 +1,30 @@
-README - HELP DESK DEVOPS PROJECT
+Help Desk DevOps Project
 
 Repositorio:
 https://github.com/NiicoEmporiio/help-desk-.git
 
---------------------------------------------------
-
-1. OBJETIVO
-
+OBJETIVO
 Implementar un sistema de tickets con HESK, monitoreo con Zabbix y automatización mediante CI/CD usando Docker.
 
---------------------------------------------------
+ARQUITECTURA
+- hesk-web
+- hesk-db
+- zabbix-server
+- zabbix-web
+- zabbix-db
+- zabbix-agent
+- GitHub Actions
+- Self-hosted runner
 
-2. INSTRUCCIONES DE DESPLIEGUE
+INSTRUCCIONES DE DESPLIEGUE
 
-Clonar repositorio:
 git clone https://github.com/NiicoEmporiio/help-desk-.git
 cd help-desk-
 
-Crear archivo .env con:
+Archivo .env:
 
-# Zona horaria
 TZ=America/Argentina/Buenos_Aires
 
-# =========================
-# HESK (MySQL)
-# =========================
 HESK_DB_NAME=hesk
 HESK_DB_USER=hesk_user
 HESK_DB_PASSWORD=hesk_pass
@@ -32,9 +32,6 @@ HESK_DB_ROOT_PASSWORD=root_pass
 
 HESK_PORT=8080
 
-# =========================
-# ZABBIX (MySQL)
-# =========================
 ZABBIX_DB_NAME=zabbix
 ZABBIX_DB_USER=zabbix_user
 ZABBIX_DB_PASSWORD=zabbix_pass
@@ -42,34 +39,25 @@ ZABBIX_DB_ROOT_PASSWORD=root_pass
 
 ZABBIX_PORT=8081
 
-Levantar servicios:
 docker compose up -d --build
 
 Acceso:
-HESK → http://localhost:8080
-Zabbix → http://localhost:8081
+http://localhost:8080
+http://localhost:8081
 
---------------------------------------------------
-
-3. USUARIOS Y CLAVES
+USUARIOS
 
 Zabbix:
-Usuario: Admin
-Password: zabbix
+Admin / zabbix
 
 MySQL:
 hesk_user / hesk_pass
 zabbix_user / zabbix_pass
-root / root_pass
 
---------------------------------------------------
+MONITOREO
 
-4. MONITOREO
-
-URI monitoreada:
+URI:
 http://hesk-web
-
-Umbrales:
 
 Caída:
 last(/HESK/web.test.fail[HESK Web Check])<>0
@@ -77,46 +65,64 @@ last(/HESK/web.test.fail[HESK Web Check])<>0
 Lentitud:
 last(/HESK/web.test.time[HESK Web Check,Home,resp])>2
 
---------------------------------------------------
+AUTOMATIZACIÓN
 
-5. PIPELINE
-
-Editar categories.txt → commit → push
+categories.txt → commit → push
 
 git add .
-git commit -m "update categories"
+git commit -m "update"
 git push
 
---------------------------------------------------
+SELF-HOSTED RUNNER
 
-6. AUTOMATIZACIÓN
+Paso 1:
+Settings → Actions → Runners → New self-hosted runner
 
-Script:
+Paso 2:
+Windows / x64
+
+Paso 3:
+C:\actions-runner-helpdesk
+
+Paso 4:
+Descargar runner
+
+Paso 5:
+tar -xf archivo.zip
+
+Paso 6:
+.\config.cmd --url https://github.com/NiicoEmporiio/help-desk-.git --token TOKEN
+
+Paso 7:
+.\run.cmd
+
+Estado:
+Listening for Jobs
+Idle
+
+Funcionamiento:
+- GitHub detecta push
+- Runner ejecuta job
+- Script Python actualiza DB
+
+SCRIPT
+
 scripts/sync_categories.py
 
-Función:
-- Lee categories.txt
-- Compara con DB
-- Inserta nuevas
-- No duplica (idempotente)
+Lee archivo, compara y actualiza categorías.
 
---------------------------------------------------
+IDEMPOTENCIA
 
-7. ARQUITECTURA
+No duplica datos y puede ejecutarse múltiples veces.
 
-Servicios:
-- hesk-web
-- hesk-db
-- zabbix-server
-- zabbix-web
-- zabbix-db
-- zabbix-agent
+SUPUESTOS
 
---------------------------------------------------
+- entorno local
+- runner local
+- base en puerto 3307
+- uso tipo prueba técnica
 
-8. SUPUESTOS
+RESULTADO
 
-- Entorno local con Docker
-- Runner local (self-hosted)
-- Base accesible por puerto 3307
-- Proyecto tipo POC
+Sistema automatizado, monitoreado y reproducible.
+
