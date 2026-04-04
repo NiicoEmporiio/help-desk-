@@ -1,128 +1,64 @@
-Help Desk DevOps Project
-
-Repositorio:
+📘 Help Desk DevOps Project
+🔗 Repositorio
 https://github.com/NiicoEmporiio/help-desk-.git
-
-OBJETIVO
+🎯 Objetivo
 Implementar un sistema de tickets con HESK, monitoreo con Zabbix y automatización mediante CI/CD usando Docker.
-
-ARQUITECTURA
-- hesk-web
-- hesk-db
-- zabbix-server
-- zabbix-web
-- zabbix-db
-- zabbix-agent
-- GitHub Actions
-- Self-hosted runner
-
-INSTRUCCIONES DE DESPLIEGUE
-
+🏗️ Arquitectura
+Servicios utilizados:
+- HESK (aplicación web)
+- MySQL (base de datos)
+- Zabbix (monitoreo)
+- GitHub Actions (CI/CD)
+- Self-hosted runner (ejecución local)
+🚀 Despliegue
+1. Clonar repositorio
 git clone https://github.com/NiicoEmporiio/help-desk-.git
 cd help-desk-
 
-Archivo .env:
+2. Crear archivo .env con variables
 
-TZ=America/Argentina/Buenos_Aires
-
-HESK_DB_NAME=hesk
-HESK_DB_USER=hesk_user
-HESK_DB_PASSWORD=hesk_pass
-HESK_DB_ROOT_PASSWORD=root_pass
-
-HESK_PORT=8080
-
-ZABBIX_DB_NAME=zabbix
-ZABBIX_DB_USER=zabbix_user
-ZABBIX_DB_PASSWORD=zabbix_pass
-ZABBIX_DB_ROOT_PASSWORD=root_pass
-
-ZABBIX_PORT=8081
-
+3. Levantar servicios
 docker compose up -d --build
 
-Acceso:
-http://localhost:8080
-http://localhost:8081
-
-USUARIOS
-
+4. Acceso:
+HESK → http://localhost:8080
+Zabbix → http://localhost:8081
+🔐 Credenciales
 Zabbix:
 Admin / zabbix
 
 MySQL:
 hesk_user / hesk_pass
 zabbix_user / zabbix_pass
-
-MONITOREO
-
-URI:
+📊 Monitoreo
+URI monitoreada:
 http://hesk-web
 
-Caída:
-last(/HESK/web.test.fail[HESK Web Check])<>0
+Alertas:
+- Caída: web.test.fail
+- Lentitud: web.test.time > 2
+🔄 Automatización
+Archivo: categories.txt
 
-Lentitud:
-last(/HESK/web.test.time[HESK Web Check,Home,resp])>2
+Flujo:
+Editar → commit → push → pipeline → actualización automática
+🤖 Self-Hosted Runner
+Paso a paso:
 
-AUTOMATIZACIÓN
+1. GitHub → Settings → Actions → Runners
+2. Crear runner (Windows x64)
+3. Carpeta: C:\actions-runner-helpdesk
+4. Descargar y extraer
+5. Configurar: .\config.cmd
+6. Ejecutar: .\run.cmd
 
-categories.txt → commit → push
-
-git add .
-git commit -m "update"
-git push
-
-SELF-HOSTED RUNNER
-
-Paso 1:
-Settings → Actions → Runners → New self-hosted runner
-
-Paso 2:
-Windows / x64
-
-Paso 3:
-C:\actions-runner-helpdesk
-
-Paso 4:
-Descargar runner
-
-Paso 5:
-tar -xf archivo.zip
-
-Paso 6:
-.\config.cmd --url https://github.com/NiicoEmporiio/help-desk-.git --token TOKEN
-
-Paso 7:
-.\run.cmd
-
-Estado:
-Listening for Jobs
-Idle
-
-Funcionamiento:
-- GitHub detecta push
-- Runner ejecuta job
-- Script Python actualiza DB
-
-SCRIPT
-
+Estado esperado:
+Listening for Jobs / Idle
+⚙️ Funcionamiento
+GitHub detecta cambios → envía job → runner ejecuta → script Python actualiza base de datos.
+🧠 Script
 scripts/sync_categories.py
 
-Lee archivo, compara y actualiza categorías.
-
-IDEMPOTENCIA
-
-No duplica datos y puede ejecutarse múltiples veces.
-
-SUPUESTOS
-
-- entorno local
-- runner local
-- base en puerto 3307
-- uso tipo prueba técnica
-
-RESULTADO
-
-Sistema automatizado, monitoreado y reproducible.
-
+Lee archivo, compara y crea solo nuevas categorías (idempotente).
+🏁 Resultado
+Sistema completamente automatizado, monitoreado y reproducible.
