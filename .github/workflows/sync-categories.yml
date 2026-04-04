@@ -31,4 +31,4 @@ jobs:
           HESK_DB_NAME: ${{ secrets.HESK_DB_NAME }}
           HESK_DB_USER: ${{ secrets.HESK_DB_USER }}
           HESK_DB_PASSWORD: ${{ secrets.HESK_DB_PASSWORD }}
-        run: py scripts/sync_categories.py
+        run: python scripts/sync_categories.py
