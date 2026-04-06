@@ -19,3 +19,4 @@ Consultas generales
 Automatizacion
 Monitoreo
 Camaras caidas
+Monitoreo
