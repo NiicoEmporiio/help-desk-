@@ -1,6 +1,5 @@
 FROM php:8.2-apache
 
-# Instalar dependencias necesarias
 RUN apt-get update && apt-get install -y \
     curl \
     libpng-dev \
@@ -12,10 +11,8 @@ RUN apt-get update && apt-get install -y \
  && docker-php-ext-install mysqli gd zip \
  && a2enmod rewrite
 
-# Copiar archivos de HESK (cuando los tengamos)
 COPY . /var/www/html/
 
-# Permisos
 RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 80

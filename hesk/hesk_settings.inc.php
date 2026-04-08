@@ -103,8 +103,8 @@ $hesk_settings['recaptcha_use']=0;
 $hesk_settings['recaptcha_public_key']='';
 $hesk_settings['recaptcha_private_key']='';
 $hesk_settings['question_use']=0;
-$hesk_settings['question_ask']='Type <i>3YTZH</i> here to fight SPAM:';
-$hesk_settings['question_ans']='3YTZH';
+$hesk_settings['question_ask']='What color is water? (give a 1 word answer to show you are a human)';
+$hesk_settings['question_ans']='blue';
 
 // --> Security
 $hesk_settings['attempt_limit']=6;
@@ -115,7 +115,7 @@ $hesk_settings['email_view_ticket']=1;
 $hesk_settings['x_frame_opt']=1;
 $hesk_settings['samesite']='Lax';
 $hesk_settings['force_ssl']=0;
-$hesk_settings['url_key']='TagXJS8T0nxCjjRtR8gv2';
+$hesk_settings['url_key']='C-nEWX0Buu9F5dKf.rTT8xWPHtqJxh';
 $hesk_settings['require_mfa']=0;
 $hesk_settings['require_mfa_customers']=0;
 $hesk_settings['elevator_duration']='60M';
