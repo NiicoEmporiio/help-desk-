@@ -60,21 +60,41 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "`n[5/6] Esperando inicializacion de servicios..." -ForegroundColor Yellow
 Start-Sleep -Seconds 20
 
-# 6. Ejecutar automatizacion de Zabbix si Python esta disponible
+# 6. Configurar Zabbix automaticamente
 Write-Host "`n[6/6] Configurando Zabbix automaticamente..." -ForegroundColor Yellow
 if ($pythonOk) {
+
     if (Test-Path "scripts\setup_zabbix.py") {
-        python scripts/setup_zabbix.py
-        if ($LASTEXITCODE -eq 0) {
-            Write-Host "Automatizacion de Zabbix completada." -ForegroundColor Green
+
+        Write-Host "Instalando dependencias de Python..." -ForegroundColor Yellow
+
+        if (Test-Path "requirements.txt") {
+            python -m pip install -r requirements.txt
         }
         else {
-            Write-Host "ADVERTENCIA: El script de Zabbix devolvio error. Revisar salida." -ForegroundColor Yellow
+            Write-Host "ADVERTENCIA: No existe requirements.txt, instalando requests manualmente" -ForegroundColor Yellow
+            python -m pip install requests
         }
+
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "ADVERTENCIA: No se pudieron instalar dependencias. Se omite setup_zabbix.py" -ForegroundColor Yellow
+        }
+        else {
+            python scripts/setup_zabbix.py
+
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "Automatizacion de Zabbix completada." -ForegroundColor Green
+            }
+            else {
+                Write-Host "ADVERTENCIA: El script de Zabbix devolvio error. Revisar salida." -ForegroundColor Yellow
+            }
+        }
+
     }
     else {
         Write-Host "ADVERTENCIA: No existe scripts\setup_zabbix.py" -ForegroundColor Yellow
     }
+
 }
 else {
     Write-Host "ADVERTENCIA: Se omite setup_zabbix.py porque Python no esta disponible." -ForegroundColor Yellow
