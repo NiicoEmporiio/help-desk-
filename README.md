@@ -1,64 +1,123 @@
 📘 Help Desk DevOps Project
+
 🔗 Repositorio
 https://github.com/NiicoEmporiio/help-desk-.git
+
 🎯 Objetivo
-Implementar un sistema de tickets con HESK, monitoreo con Zabbix y automatización mediante CI/CD usando Docker.
+Implementar un sistema de mesa de ayuda con HESK, monitoreo con Zabbix y automatización mediante CI/CD, utilizando Docker Compose para levantar el entorno y scripts auxiliares para dejar la instalación lo más automatizada posible en una PC nueva.
+
 🏗️ Arquitectura
-Servicios utilizados:
-- HESK (aplicación web)
-- MySQL (base de datos)
-- Zabbix (monitoreo)
-- GitHub Actions (CI/CD)
-- Self-hosted runner (ejecución local)
+
+Servicios principales:
+- HESK → aplicación web de tickets
+- MySQL → base de datos de HESK
+- Zabbix Server → motor de monitoreo
+- Zabbix Web → interfaz web de monitoreo
+- Zabbix Agent → agente auxiliar
+- GitHub Actions → automatización CI/CD
+- Self-hosted runner → ejecución local del pipeline
+
 🚀 Despliegue
-1. Clonar repositorio
+
+Opción recomendada (semiautomática)
+
+1. Clonar repositorio:
 git clone https://github.com/NiicoEmporiio/help-desk-.git
 cd help-desk-
 
-2. Crear archivo .env con variables
+2. Ejecutar el setup:
+.\setup.ps1
 
-3. Levantar servicios
-docker compose up -d --build
+Si PowerShell bloquea ejecución:
+Set-ExecutionPolicy -Scope Process Bypass
 
-4. Acceso:
+⚙️ Qué hace setup.ps1
+- verifica Docker
+- verifica Python
+- crea .env automáticamente desde .env.example
+- levanta contenedores
+- instala dependencias Python
+- ejecuta setup_zabbix.py
+- deja Zabbix configurado automáticamente
+
+🌐 Acceso
 HESK → http://localhost:8080
 Zabbix → http://localhost:8081
+
 🔐 Credenciales
+
 Zabbix:
 Admin / zabbix
 
-MySQL:
+MySQL HESK:
 hesk_user / hesk_pass
+
+MySQL Zabbix:
 zabbix_user / zabbix_pass
+
 📊 Monitoreo
+
 URI monitoreada:
 http://hesk-web
 
-Alertas:
-- Caída: web.test.fail
-- Lentitud: web.test.time > 2
+Configuración automática:
+- Host: HESK
+- Web Scenario: HESK Web Check
+- Step: Home
+- Triggers:
+  - HESK caído
+  - HESK lento
+
 🔄 Automatización
-Archivo: categories.txt
+
+Archivo principal:
+categories.txt
 
 Flujo:
-Editar → commit → push → pipeline → actualización automática
-🤖 Self-Hosted Runner
-Paso a paso:
+Editar → commit → push → pipeline → actualización automática en HESK
 
+🤖 Self-Hosted Runner
+
+Instalación:
 1. GitHub → Settings → Actions → Runners
-2. Crear runner (Windows x64)
-3. Carpeta: C:\actions-runner-helpdesk
-4. Descargar y extraer
-5. Configurar: .\config.cmd
-6. Ejecutar: .\run.cmd
+2. Crear runner Windows x64
+3. Carpeta:
+C:\actions-runner-helpdesk
+4. Ejecutar:
+config.cmd
+run.cmd
 
 Estado esperado:
 Listening for Jobs / Idle
-⚙️ Funcionamiento
-GitHub detecta cambios → envía job → runner ejecuta → script Python actualiza base de datos.
-🧠 Script
-scripts/sync_categories.py
 
-Lee archivo, compara y crea solo nuevas categorías (idempotente).
+🔐 Secrets necesarios
+
+HESK_DB_HOST = 127.0.0.1
+HESK_DB_PORT = 3307
+HESK_DB_NAME = hesk
+HESK_DB_USER = hesk_user
+HESK_DB_PASSWORD = hesk_pass
+
+🧠 Scripts
+
+scripts/setup_zabbix.py:
+Configura automáticamente Zabbix (host, web scenario, triggers)
+
+scripts/sync_categories.py:
+Sincroniza categorías sin duplicar (idempotente)
+
+📦 Dependencias
+
+requirements.txt:
+requests
+PyMySQL
+
 🏁 Resultado
-Sistema completamente automatizado, monitoreado y reproducible.
+
+Sistema:
+- reproducible
+- automatizado
+- dockerizado
+- monitoreado
+- portable entre PCs
+- con CI/CD funcionando
