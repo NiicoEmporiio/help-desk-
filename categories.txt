@@ -5,3 +5,4 @@ Redes
 Accesos y usuarios
 Impresoras
 Prueba de categorias
+Prueba de errores
